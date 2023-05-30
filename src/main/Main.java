@@ -12,6 +12,6 @@ public class Main {
     window.pack(); // set window size to preferred size of gamePanel
     window.setLocationRelativeTo(null); // centers window
     window.setVisible(true);
+    gamePanel.startGameThread();
   }
 }
-
