@@ -6,29 +6,26 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import entities.Player;
+import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
   JPanel panel = new JPanel();
 
-  final int originalTileSize = 16; // 16 x 16 pixels
-  final int scale = 2; // scale up by 2
+  public final int originalTileSize = 16; // 16 x 16 pixels
+  public final int scale = 2; // scale up by 2
   public final int tileSize = originalTileSize * scale; // 32 x 32 pixels. made public so player class can access
 
-  final int maxScreenVert = 16;
-  final int maxScreenHoriz = 16;
-  final int screenWidth = tileSize * maxScreenVert; // 512 pixels
-  final int screenHeight = tileSize * maxScreenHoriz; // 512 pixels
+  public final int maxScreenVert = 16;
+  public final int maxScreenHoriz = 16;
+  public final int screenWidth = tileSize * maxScreenVert; // 512 pixels
+  public final int screenHeight = tileSize * maxScreenHoriz; // 512 pixels
   int FPS = 60; // frames per second
+
   Thread gameThread; // thread for game loop (update, render, draw)
-
   KeyHandler keyH = new KeyHandler(); // create key handler object
-
   Player player = new Player(this, keyH);
-
-  int playerX = 100; // player x default position
-  int playerY = 100; // player y default position
-  int playerSpeed = 2; // player speed
+  TileManager tileManager = new TileManager(this);
 
   public GamePanel() {
     this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // set size of panel
@@ -36,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     this.setDoubleBuffered(true); // for smoother animation
     this.addKeyListener(keyH); // add key listener to panel
     this.setFocusable(true);
+
   }
 
   public void startGameThread() {
@@ -84,6 +82,8 @@ public class GamePanel extends JPanel implements Runnable {
     super.paintComponent(g); // clears screen
 
     Graphics2D g2 = (Graphics2D) g; // cast to Graphics2D object
+    tileManager.draw(g2); // call this method before player.draw() so that the player is drawn on top of
+                          // the tiles
     player.draw(g2);
     g2.dispose(); // dispose of graphics context and release resources
   }
