@@ -1,3 +1,5 @@
+package main;
+
 import javax.swing.JFrame;
 
 public class Main {
@@ -5,13 +7,13 @@ public class Main {
     JFrame window = new JFrame("Hello World");
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setResizable(false); // prevents resizing
-    window.setTitle("RPG GAME");
+    window.setTitle("Project Haeylios");
 
     GamePanel gamePanel = new GamePanel();
     window.add(gamePanel); // add gamePanel to window
     window.pack(); // set window size to preferred size of gamePanel
     window.setLocationRelativeTo(null); // centers window
     window.setVisible(true);
+    gamePanel.startGameThread();
   }
 }
-
