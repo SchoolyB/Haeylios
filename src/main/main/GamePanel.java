@@ -1,8 +1,11 @@
+package main;
+
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import entities.Player;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -10,7 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
 
   final int originalTileSize = 16; // 16 x 16 pixels
   final int scale = 2; // scale up by 2
-  final int tileSize = originalTileSize * scale; // 32 x 32 pixels
+  public final int tileSize = originalTileSize * scale; // 32 x 32 pixels. made public so player class can access
 
   final int maxScreenVert = 16;
   final int maxScreenHoriz = 16;
@@ -20,6 +23,8 @@ public class GamePanel extends JPanel implements Runnable {
   Thread gameThread; // thread for game loop (update, render, draw)
 
   KeyHandler keyH = new KeyHandler(); // create key handler object
+
+  Player player = new Player(this, keyH);
 
   int playerX = 100; // player x default position
   int playerY = 100; // player y default position
@@ -72,25 +77,14 @@ public class GamePanel extends JPanel implements Runnable {
   }
 
   public void Update() { // constantly update game logic
-
-    if (keyH.upArrowPressed == true) {
-      playerY -= playerSpeed; // move player up could also be playerY = playerY - playerSpeed
-    } else if (keyH.downArrowPressed == true) {
-      playerY += playerSpeed; // move player down
-    } else if (keyH.leftArrowPressed == true) {
-      playerX -= playerSpeed; // move player left
-    } else if (keyH.rightArrowPressed == true) {
-      playerX += playerSpeed; // move player right
-    }
+    player.update();
   }
 
   public void paintComponent(Graphics g) { // draw graphics
     super.paintComponent(g); // clears screen
 
     Graphics2D g2 = (Graphics2D) g; // cast to Graphics2D object
-
-    g2.setColor(Color.WHITE);
-    g2.fillRect(playerX, playerY, tileSize, tileSize); // fill screen with white
+    player.draw(g2);
     g2.dispose(); // dispose of graphics context and release resources
   }
 
