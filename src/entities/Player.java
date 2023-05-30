@@ -1,14 +1,9 @@
 package entities;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-
 import javax.imageio.ImageIO;
-
 import main.GamePanel;
 import main.KeyHandler;
 
@@ -32,8 +27,15 @@ public class Player extends Entity {
   }
 
   public void getPlayerSprite() {
-    try {
+    try { // never forget how much I struggled with this and all the errors I
+          // got...literally didnt change anything and it worked
       down1 = ImageIO.read(getClass().getResourceAsStream("../resources/sprites/player/down1.png"));
+      down2 = ImageIO.read(getClass().getResourceAsStream("../resources/sprites/player/down2.png"));
+      up1 = ImageIO.read(getClass().getResourceAsStream("../resources/sprites/player/up1.png"));
+      up2 = ImageIO.read(getClass().getResourceAsStream("../resources/sprites/player/up2.png"));
+      left = ImageIO.read(getClass().getResourceAsStream("../resources/sprites/player/left.png"));
+      right = ImageIO.read(getClass().getResourceAsStream("../resources/sprites/player/right.png"));
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -42,41 +44,68 @@ public class Player extends Entity {
   public void update() {
 
     if (KeyH.upArrowPressed == true) {
-      y -= speed; // move player up could also be playerY = playerY - playerSpeed
       direction = "up";
+      y -= speed; // move player up could also be playerY = playerY - playerSpeed
     } else if (KeyH.downArrowPressed == true) {
-      y += speed; // move player down
       direction = "down";
+      y += speed; // move player down
     } else if (KeyH.leftArrowPressed == true) {
-      x -= speed; // move player left
       direction = "left";
+      x -= speed; // move player left
     } else if (KeyH.rightArrowPressed == true) {
-      x += speed; // move player right
       direction = "right";
+      x += speed; // move player right
     }
 
+    spriteCounter++;
+    if (spriteCounter > 12) {
+      if (spriteNum == 1) {
+        spriteNum = 2;
+
+      } else if (spriteNum == 2) {
+        spriteNum = 1;
+      }
+      spriteCounter = 0;
+    }
   }
 
   public void draw(Graphics2D g2) {
-
-    // g2.setColor(Color.WHITE);
-    // g2.fillRect(x, y, gamePanel.tileSize, gamePanel.tileSize); // fill screen
-    // with white
 
     BufferedImage image = null;
 
     switch (direction) {
       case "up":
-        image = down1;
+        if (spriteNum == 1) {
+          image = up1;
+        }
+        if (spriteNum == 2) {
+          image = up2;
+        }
         break;
       case "down":
-        image = down1;
+        if (spriteNum == 1) {
+          image = down1;
+        }
+        if (spriteNum == 2) {
+          image = down2;
+        }
         break;
       case "left":
-        image = down1;
+        if (spriteNum == 1) {
+          image = left;
+        }
+        if (spriteNum == 2) {
+          image = left;
+        }
+
         break;
       case "right":
-        image = down1;
+        if (spriteNum == 1) {
+          image = right;
+        }
+        if (spriteNum == 2) {
+          image = right;
+        }
         break;
     }
 

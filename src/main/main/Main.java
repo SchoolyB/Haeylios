@@ -7,7 +7,7 @@ public class Main {
     JFrame window = new JFrame("Hello World");
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setResizable(false); // prevents resizing
-    window.setTitle("RPG GAME");
+    window.setTitle("Project Haeylios");
 
     GamePanel gamePanel = new GamePanel();
     window.add(gamePanel); // add gamePanel to window
