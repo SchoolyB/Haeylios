@@ -22,9 +22,15 @@ public class GamePanel extends JPanel implements Runnable {
   public final int screenHeight = tileSize * maxScreenHoriz; // 512 pixels
   int FPS = 60; // frames per second
 
+  // WORLD MAP VARIABLES
+  public final int maxWorldMapVert = 50; // 50 tiles vertically in world map
+  public final int maxWorldMapHoriz = 50; // 50 tiles horizontally in world map
+  public final int worldMapWidth = tileSize * maxWorldMapVert; // 800 pixels
+  public final int worldMapHeight = tileSize * maxWorldMapHoriz; // 800 pixels
+
   Thread gameThread; // thread for game loop (update, render, draw)
   KeyHandler keyH = new KeyHandler(); // create key handler object
-  Player player = new Player(this, keyH);
+  public Player player = new Player(this, keyH);
   TileManager tileManager = new TileManager(this);
 
   public GamePanel() {

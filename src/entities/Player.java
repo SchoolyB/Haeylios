@@ -12,16 +12,25 @@ public class Player extends Entity {
   GamePanel gamePanel;
   KeyHandler KeyH;
 
+  public final int screenX; // returns half of screen width, thus
+                            // placing player in center
+  // of screen
+  public final int screenY;
+
   public Player(GamePanel gamePanel, KeyHandler KeyH) {
     this.gamePanel = gamePanel;
     this.KeyH = KeyH; // why did I have to do this???
+    screenX = gamePanel.screenWidth / 2 - gamePanel.tileSize / 2; // returns half of screen width, thus placing player
+                                                                  // in center of screen
+    screenY = gamePanel.screenHeight / 2 - gamePanel.tileSize / 2; // returns half of screen height, thus placing player
+                                                                   // in center of screen
     setDefaultValues();
     getPlayerSprite();
   };
 
   public void setDefaultValues() {
-    x = 100;
-    y = 100;
+    worldX = gamePanel.tileSize * 23; // sets player's world position to center of screen
+    worldY = gamePanel.tileSize * 21; // sets player's world position to center of screen
     speed = 4;
     direction = "down";
   }
@@ -45,16 +54,16 @@ public class Player extends Entity {
 
     if (KeyH.upArrowPressed == true) {
       direction = "up";
-      y -= speed; // move player up could also be playerY = playerY - playerSpeed
+      worldY -= speed; // move player up could also be playerY = playerY - playerSpeed
     } else if (KeyH.downArrowPressed == true) {
       direction = "down";
-      y += speed; // move player down
+      worldY += speed; // move player down
     } else if (KeyH.leftArrowPressed == true) {
       direction = "left";
-      x -= speed; // move player left
+      worldX -= speed; // move player left
     } else if (KeyH.rightArrowPressed == true) {
       direction = "right";
-      x += speed; // move player right
+      worldX += speed; // move player right
     }
 
     spriteCounter++;
@@ -109,10 +118,12 @@ public class Player extends Entity {
         break;
     }
 
-    g2.drawImage(image, x, y, gamePanel.tileSize, gamePanel.tileSize, null); // draw player sprite at playerX, playerY
-                                                                             // with width and height of playerSize null
-                                                                             // is for ImageObserver which we don't need
-                                                                             // to worry about
+    g2.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null); // draw player sprite at
+                                                                                         // playerX,
+    // playerY
+    // with width and height of playerSize null
+    // is for ImageObserver which we don't need
+    // to worry about
   }
 
 }
