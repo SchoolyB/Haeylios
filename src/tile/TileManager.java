@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import java.awt.Graphics2D;
@@ -18,7 +17,7 @@ public class TileManager {
   public TileManager(GamePanel gamePanel) {
     this.gamePanel = gamePanel; // set reference to gamePanel
     tile = new Tile[10]; // create array of tiles with 10 elements
-    mapTileNum = new int[gamePanel.maxScreenVert][gamePanel.maxScreenHoriz];
+    mapTileNum = new int[gamePanel.maxWorldMapVert][gamePanel.maxWorldMapHoriz];
 
     getTileImage();
     loadMap();
@@ -33,7 +32,12 @@ public class TileManager {
       tile[1] = new Tile();
       tile[1].image = ImageIO.read(getClass().getResourceAsStream("../resources/tiles/tallGrass1.png"));
 
-      // todo copy and paste the above line for each tile image like water, sand etc.
+      tile[2] = new Tile();
+      tile[2].image = ImageIO.read(getClass().getResourceAsStream("../resources/tiles/wheat1.png"));
+
+      tile[3] = new Tile();
+      tile[3].image = ImageIO.read(getClass().getResourceAsStream("../resources/tiles/bush1.png"));
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -42,22 +46,23 @@ public class TileManager {
   public void loadMap() {
     // load map from file
     try {
-      InputStream is = getClass().getResourceAsStream("../resources/maps/map1.txt"); // get map file from resources
+      InputStream is = getClass().getResourceAsStream("../resources/maps/world-map-calidos.txt"); // get map file from
+                                                                                                  // resources
       BufferedReader br = new BufferedReader(new InputStreamReader(is)); // read map file line by line
       int col = 0;
       int row = 0;
 
-      while (col < gamePanel.maxScreenVert && row < gamePanel.maxScreenHoriz) {
+      while (col < gamePanel.maxWorldMapVert && row < gamePanel.maxWorldMapHoriz) {
         String line = br.readLine(); // read single line from map file
 
-        while (col < gamePanel.maxScreenVert) {
+        while (col < gamePanel.maxWorldMapVert) {
           String numbers[] = line.split(" "); // split line into array of strings
           int num = Integer.parseInt(numbers[col]); // convert string to integer
           mapTileNum[col][row] = num; // store tile number in mapTileNum array
           col++; // increment col by one
         }
-        if (col == gamePanel.maxScreenVert) { // if col is equal to max screen vert reset col to 0 and increment row
-                                              // by one
+        if (col == gamePanel.maxWorldMapVert) { // if col is equal to max screen vert reset col to 0 and increment row
+          // by one
           col = 0;
           row++;
         }
@@ -72,28 +77,43 @@ public class TileManager {
 
   public void draw(Graphics2D g2) {
 
-    int col = 0;
-    int row = 0;
+    int worldVert = 0;
+    int worldHoriz = 0;
 
-    int x = 0;
-    int y = 0;
-
-    while (col < gamePanel.maxScreenVert && row < gamePanel.maxScreenHoriz) { // while col and row are less than max
+    while (worldVert < gamePanel.maxWorldMapVert && worldHoriz < gamePanel.maxWorldMapHoriz) { // while worldVert and
+                                                                                               // worldHoriz are less
+                                                                                               // than max
 
       // screen size draw tiles
 
-      int tileNum = mapTileNum[col][row]; // get tile number from mapTileNum array
+      int tileNum = mapTileNum[worldVert][worldHoriz]; // get tile number from mapTileNum array
 
-      g2.drawImage(tile[tileNum].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null); // passes the image, x, y,
-                                                                                             // width, height, observer
-      col++; // increment col by one
-      x += gamePanel.tileSize; // increment x by tile size
-      if (col == gamePanel.maxScreenVert) { // if col is equal to max screen vert reset col to 0 and increment row by
-                                            // one
-        col = 0; // reset col to 0
-        x = 0; // reset x to 0
-        row++; // increment row by one
-        y += gamePanel.tileSize; // increment y by tile size
+      int worldX = worldVert * gamePanel.tileSize; // calculate worldX
+      int worldY = worldHoriz * gamePanel.tileSize; // calculate worldY
+      int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX; // calculate screenX
+      int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY; // calculate screenY
+
+      // if the player is a certain distance from the tile, draw it...
+      // pretty wicked if statement
+      if (worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX &&
+      // the plus and minus gamePanel.tileSize is to make sure the tile is drawn even
+      // if the player is only half on the tile
+          worldX - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX &&
+          worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
+          worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY) {
+
+        g2.drawImage(tile[tileNum].image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null); // passes the
+      }
+      // image, x, y,
+      // width, height, observer
+      worldVert++; // increment worldVert by one
+      if (worldVert == gamePanel.maxWorldMapVert) { // if worldVert maxWorldMapHoriz equal to max screen vert reset
+                                                    // worldVert to 0 and increment worldHoriz by
+        // one
+        worldVert = 0; // reset col to 0
+
+        worldHoriz++; // increment worldHoriz by one
+
       }
     }
 
