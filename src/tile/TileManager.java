@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import java.awt.Graphics2D;
@@ -42,7 +41,7 @@ public class TileManager {
   public void loadMap() {
     // load map from file
     try {
-      InputStream is = getClass().getResourceAsStream("../resources/maps/map1.txt"); // get map file from resources
+      InputStream is = getClass().getResourceAsStream("../resources/maps/sampleMap.txt"); // get map file from resources
       BufferedReader br = new BufferedReader(new InputStreamReader(is)); // read map file line by line
       int col = 0;
       int row = 0;
