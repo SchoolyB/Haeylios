@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
   JPanel panel = new JPanel();
 
   final int originalTileSize = 16; // 16 x 16 pixels
-  final int scale = 3; // scale up by 3
+  final int scale = 4;
   public final int tileSize = originalTileSize * scale; // 32 x 32 pixels. made public so player class can access
 
   public final int maxScreenVert = 16;
@@ -31,6 +31,9 @@ public class GamePanel extends JPanel implements Runnable {
   Thread gameThread; // thread for game loop (update, render, draw)
   KeyHandler keyH = new KeyHandler(); // create key handler object
   public Player player = new Player(this, keyH);
+  public CollisionChecker collisionChecker = new CollisionChecker(this); // create collision checker object for
+                                                                         // collision
+  // detection between player and tiles
   TileManager tileManager = new TileManager(this);
 
   public GamePanel() {
@@ -51,17 +54,17 @@ public class GamePanel extends JPanel implements Runnable {
   public void run() {
 
     // game loop constantly updates, renders, and draws
-    double nsPerFrame = 1000000000.0 / FPS; // 1 billion nanoseconds divided by FPS = nanoseconds per frame
+    double nanosPerFrame = 1000000000.0 / FPS; // 1 billion nanoseconds divided by FPS = nanoseconds per frame
     double delta = 0; // change in time
     long lastTime = System.nanoTime(); // get current time in nanoseconds
     long currentTime;
 
     long timer = 0;
-    int showCount = 0;
+    int frameCount = 0;
     while (gameThread != null) {
 
       currentTime = System.nanoTime(); // get current time in nanoseconds
-      delta += (currentTime - lastTime) / nsPerFrame;
+      delta += (currentTime - lastTime) / nanosPerFrame;
       // add change in time
       timer += currentTime - lastTime; // add change in time to timer
       lastTime = currentTime; // set last time to current time
@@ -70,11 +73,11 @@ public class GamePanel extends JPanel implements Runnable {
         Update();
         repaint(); // calls paintComponent(g) IDK WHY LOL
         delta--; // reset change in time
-        showCount++;
+        frameCount++;
       }
       if (timer >= 1000000000) {
-        System.out.println("FPS: " + showCount);
-        showCount = 0;
+        System.out.println("Current FPS: " + frameCount);
+        frameCount = 0;
         timer = 0;
       }
     }
