@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -24,13 +25,16 @@ public class Player extends Entity {
                                                                   // in center of screen
     screenY = gamePanel.screenHeight / 2 - gamePanel.tileSize / 2; // returns half of screen height, thus placing player
                                                                    // in center of screen
+
+    hitbox = new Rectangle(0, 0, gamePanel.tileSize, gamePanel.tileSize); // takes in x, y, width, height
+
     setDefaultValues();
     getPlayerSprite();
   };
 
   public void setDefaultValues() {
-    worldX = gamePanel.tileSize * 23; // sets player's world position to center of screen
-    worldY = gamePanel.tileSize * 21; // sets player's world position to center of screen
+    worldCoordX = gamePanel.tileSize * 23; // sets player's world position to center of screen
+    worldCoordY = gamePanel.tileSize * 21; // sets player's world position to center of screen
     speed = 4;
     direction = "down";
   }
@@ -52,29 +56,51 @@ public class Player extends Entity {
 
   public void update() {
 
-    if (KeyH.upArrowPressed == true) {
-      direction = "up";
-      worldY -= speed; // move player up could also be playerY = playerY - playerSpeed
-    } else if (KeyH.downArrowPressed == true) {
-      direction = "down";
-      worldY += speed; // move player down
-    } else if (KeyH.leftArrowPressed == true) {
-      direction = "left";
-      worldX -= speed; // move player left
-    } else if (KeyH.rightArrowPressed == true) {
-      direction = "right";
-      worldX += speed; // move player right
-    }
+    if (KeyH.upArrowPressed == true || KeyH.downArrowPressed == true || KeyH.leftArrowPressed == true
+        || KeyH.rightArrowPressed == true) {
 
-    spriteCounter++;
-    if (spriteCounter > 12) {
-      if (spriteNum == 1) {
-        spriteNum = 2;
-
-      } else if (spriteNum == 2) {
-        spriteNum = 1;
+      if (KeyH.upArrowPressed == true) {
+        direction = "up";
+      } else if (KeyH.downArrowPressed == true) {
+        direction = "down";
+      } else if (KeyH.leftArrowPressed == true) {
+        direction = "left";
+      } else if (KeyH.rightArrowPressed == true) {
+        direction = "right";
       }
-      spriteCounter = 0;
+      // removed snippets that we causing the player to move slower. Thanks Copilot...
+      // an example of this was worldCoordY += speed;
+
+      collisionOn = false;
+      gamePanel.collisionChecker.CheckTile(this);
+
+      if (collisionOn == false) {
+        switch (direction) {
+          case "up":
+            worldCoordY -= speed;
+            break;
+          case "down":
+            worldCoordY += speed;
+            break;
+          case "left":
+            worldCoordX -= speed;
+            break;
+          case "right":
+            worldCoordX += speed;
+            break;
+
+        }
+      }
+      spriteCounter++;
+      if (spriteCounter > 12) {
+        if (spriteNum == 1) {
+          spriteNum = 2;
+
+        } else if (spriteNum == 2) {
+          spriteNum = 1;
+        }
+        spriteCounter = 0;
+      }
     }
   }
 

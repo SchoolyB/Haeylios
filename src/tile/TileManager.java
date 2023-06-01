@@ -11,8 +11,8 @@ import java.awt.Graphics2D;
 public class TileManager {
 
   GamePanel gamePanel; // reference to gamePanel
-  Tile[] tile; // array of tiles
-  int mapTileNum[][]; // array of tile numbers
+  public Tile[] tile; // array of tiles
+  public int mapTileNum[][]; // array of tile numbers
 
   public TileManager(GamePanel gamePanel) {
     this.gamePanel = gamePanel; // set reference to gamePanel
@@ -37,6 +37,7 @@ public class TileManager {
 
       tile[3] = new Tile();
       tile[3].image = ImageIO.read(getClass().getResourceAsStream("../resources/tiles/bush1.png"));
+      tile[3].collision = true; // set collision to true to not allow player to walk through bushes
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -88,19 +89,19 @@ public class TileManager {
 
       int tileNum = mapTileNum[worldVert][worldHoriz]; // get tile number from mapTileNum array
 
-      int worldX = worldVert * gamePanel.tileSize; // calculate worldX
-      int worldY = worldHoriz * gamePanel.tileSize; // calculate worldY
-      int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX; // calculate screenX
-      int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY; // calculate screenY
+      int worldCoordX = worldVert * gamePanel.tileSize; // calculate worldCoordX
+      int worldCoordY = worldHoriz * gamePanel.tileSize; // calculate worldCoordY
+      int screenX = worldCoordX - gamePanel.player.worldCoordX + gamePanel.player.screenX; // calculate screenX
+      int screenY = worldCoordY - gamePanel.player.worldCoordY + gamePanel.player.screenY; // calculate screenY
 
       // if the player is a certain distance from the tile, draw it...
       // pretty wicked if statement
-      if (worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX &&
+      if (worldCoordX + gamePanel.tileSize > gamePanel.player.worldCoordX - gamePanel.player.screenX &&
       // the plus and minus gamePanel.tileSize is to make sure the tile is drawn even
       // if the player is only half on the tile
-          worldX - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX &&
-          worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
-          worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY) {
+          worldCoordX - gamePanel.tileSize < gamePanel.player.worldCoordX + gamePanel.player.screenX &&
+          worldCoordY + gamePanel.tileSize > gamePanel.player.worldCoordY - gamePanel.player.screenY &&
+          worldCoordY - gamePanel.tileSize < gamePanel.player.worldCoordY + gamePanel.player.screenY) {
 
         g2.drawImage(tile[tileNum].image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null); // passes the
       }
