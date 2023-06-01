@@ -61,17 +61,15 @@ public class Player extends Entity {
 
       if (KeyH.upArrowPressed == true) {
         direction = "up";
-
       } else if (KeyH.downArrowPressed == true) {
         direction = "down";
-        worldCoordY += speed; // move player down
       } else if (KeyH.leftArrowPressed == true) {
         direction = "left";
-        worldCoordX -= speed; // move player left
       } else if (KeyH.rightArrowPressed == true) {
         direction = "right";
-        worldCoordX += speed; // move player right
       }
+      // removed snippets that we causing the player to move slower. Thanks Copilot...
+      // an example of this was worldCoordY += speed;
 
       collisionOn = false;
       gamePanel.collisionChecker.CheckTile(this);
